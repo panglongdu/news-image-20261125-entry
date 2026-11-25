@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Copy the built news image into the output directory.
+"""Hand the built news image to the grader.
 
-The grader runs this program with MAKEFUN_OUTPUT_DIR set; when it is
-absent the image goes to /output instead. The directory is created
-when it does not exist yet.
+The grader sets MAKEFUN_OUTPUT_DIR to the directory it wants the
+image in; when that variable is missing we fall back to /output.
+We create the directory when it is not there yet, then copy
+entry.png (which sits next to this file) into it.
 """
 import os
 import shutil
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "entry.png")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGE = os.path.join(BASE_DIR, "entry.png")
 
-out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
-os.makedirs(out_dir, exist_ok=True)
-shutil.copyfile(SRC, os.path.join(out_dir, "entry.png"))
-print("wrote entry.png to", out_dir)
+target = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
+if not os.path.isfile(IMAGE):
+    raise SystemExit("entry.png not found next to main.py; run build_image.py first")
+os.makedirs(target, exist_ok=True)
+shutil.copyfile(IMAGE, os.path.join(target, "entry.png"))
+print("entry.png written to", target)
