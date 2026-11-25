@@ -1,17 +1,17 @@
-"""make.fun news-image-20261125 entry.
+#!/usr/bin/env python3
+"""Copy the built news image into the output directory.
 
-Writes the day's-news summary image to the output directory.
-The image beside this file (entry.png, 1024x1024, drawn by build_image.py
-from the headlines of 25 November 2026) is the entry; this program copies
-it to <output>/entry.png, where <output> is MAKEFUN_OUTPUT_DIR when set
-and /output otherwise.
+The grader runs this program with MAKEFUN_OUTPUT_DIR set; when it is
+absent the image goes to /output instead. The directory is created
+when it does not exist yet.
 """
 import os
 import shutil
-from pathlib import Path
 
-src = Path(__file__).with_name("entry.png")
-out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
-out_dir.mkdir(parents=True, exist_ok=True)
-shutil.copyfile(src, out_dir / "entry.png")
-print(f"wrote {out_dir / 'entry.png'}")
+HERE = os.path.dirname(os.path.abspath(__file__))
+SRC = os.path.join(HERE, "entry.png")
+
+out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
+os.makedirs(out_dir, exist_ok=True)
+shutil.copyfile(SRC, os.path.join(out_dir, "entry.png"))
+print("wrote entry.png to", out_dir)
